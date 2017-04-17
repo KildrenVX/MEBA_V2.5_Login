@@ -1,0 +1,260 @@
+ package com.example.m.meba_v2;
+
+ import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Toast;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+ public class MainActivity extends FragmentActivity implements OnMapReadyCallback,
+         GoogleApiClient.ConnectionCallbacks,
+         GoogleApiClient.OnConnectionFailedListener,
+         LocationListener {
+
+
+     private GoogleMap mMap;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        checkLocationPermission();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        final FloatingActionButton p = (FloatingActionButton) findViewById(R.id.Perfil);
+        p.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,Perfil.class);
+                startActivity(intent);
+            }
+        });
+
+        final FloatingActionButton p1 = (FloatingActionButton) findViewById(R.id.Ajustes);
+        p1.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,Ajustees.class);
+                startActivity(intent);
+            }
+        });
+
+        final FloatingActionButton p2 = (FloatingActionButton) findViewById(R.id.Lugares);
+        p2.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,LugaresFavoritos.class);
+                startActivity(intent);
+            }
+        });
+
+        final FloatingActionButton p3 = (FloatingActionButton) findViewById(R.id.LugarNuevo);
+        p3.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+
+                  Intent intent = new Intent(MainActivity.this,Agregar_PI.class);
+                  startActivity(intent);
+                mMap.clear();
+
+                Location location = new Location("");
+
+                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("Lugar creado con floating button");
+                mMap.addMarker(markerOptions);
+            }
+        });
+
+    }
+
+     @Override
+     public void onMapReady(GoogleMap googleMap) {
+         mMap=googleMap;
+         mMap.setMapType(googleMap.MAP_TYPE_HYBRID);
+         mMap.setMyLocationEnabled(true);
+
+         LatLng MiCasa = new LatLng(-33.3267245, -70.74691519999999);
+         mMap.addMarker(new MarkerOptions().position(MiCasa).title("Esta es mi casa"));
+         mMap.moveCamera(CameraUpdateFactory.newLatLng(MiCasa));
+         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(MiCasa,12));
+
+
+         LatLng LaU = new LatLng(-33.405845, -70.682372);
+         mMap.addMarker(new MarkerOptions().position(LaU).title("Esto es Inacap"));
+
+         CameraUpdate zoom= CameraUpdateFactory.zoomTo(15);
+         mMap.animateCamera(zoom);
+         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                 != PackageManager.PERMISSION_GRANTED) {
+             return;
+         }
+
+
+         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+             @Override
+             public void onMapClick(LatLng latLng) {
+                 //muestra coordenadas de posicion tocada dentro del mapa
+                 Toast.makeText(getApplicationContext(), latLng.toString(), Toast.LENGTH_LONG).show();
+             }
+         });
+
+         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
+     }
+
+
+     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+     public boolean checkLocationPermission(){
+         if (ContextCompat.checkSelfPermission(this,
+                 Manifest.permission.ACCESS_FINE_LOCATION)
+                 != PackageManager.PERMISSION_GRANTED) {
+
+             //preguntar si el usuario necesita explicacion
+             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                     Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                 // Mostrar explicacion del permiso
+                 ActivityCompat.requestPermissions(this,
+                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                         MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+             } else {
+                 // pedir el permiso
+                 ActivityCompat.requestPermissions(this,
+                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                         MY_PERMISSIONS_REQUEST_LOCATION);
+             }
+             return false;
+         } else {
+             return true;
+         }
+     }
+
+     @Override
+     public void onRequestPermissionsResult(int requestCode,
+                                            String permissions[], int[] grantResults) {
+         switch (requestCode) {
+             case MY_PERMISSIONS_REQUEST_LOCATION: {
+                 // Si la consulta es cancelada los arreglos estaran vacios
+                 if (grantResults.length > 0
+                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                     // permiso concedido
+                     if (ContextCompat.checkSelfPermission(this,
+                             Manifest.permission.ACCESS_FINE_LOCATION)
+                             == PackageManager.PERMISSION_GRANTED) {
+
+
+                         mMap.setMyLocationEnabled(true);
+                     }
+
+                 } else {
+
+                     // Permiso denegado
+                     Toast.makeText(this, "Permiso denegado", Toast.LENGTH_LONG).show();
+                 }
+                 return;
+             }
+
+             // agregar mas case para mas permisos(wifi,contactos,etc)
+
+         }
+     }
+     @Override
+     public void onConnected(@Nullable Bundle bundle) {
+
+     }
+
+     @Override
+     public void onConnectionSuspended(int i) {
+
+     }
+
+
+     @Override
+     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+     }
+
+     @Override
+     public void onLocationChanged(Location location) {
+         mMap.clear();
+
+         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+       MarkerOptions markerOptions = new MarkerOptions();
+         markerOptions.position(latLng);
+         markerOptions.title("Mi lugar");
+         //adding marker to the map
+         mMap.addMarker(markerOptions);
+
+         //opening position with some zoom level in the map
+         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0f));
+
+
+     }
+
+     public void BotonMarcador(Location location){
+         mMap.clear();
+
+         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+         markerOptions.position(latLng);
+         markerOptions.title("Marcador en mi posicion actual");
+
+         mMap.addMarker(markerOptions);
+
+
+         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0f));
+
+     }
+
+     @Override
+     public void onStatusChanged(String provider, int status, Bundle extras) {
+
+     }
+
+     @Override
+     public void onProviderEnabled(String provider) {
+
+     }
+
+     @Override
+     public void onProviderDisabled(String provider) {
+
+     }
+ }

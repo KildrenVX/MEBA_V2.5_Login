@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.m.meba_v2.Login">
+
+    <TextView
+
+        android:id="@+id/BienvenidaLog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Acceso"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="162dp"
+        tools:layout_editor_absoluteY="25dp"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/BienvenidaLog"
+        android:layout_toEndOf="@+id/BienvenidaLog"
+        android:layout_marginStart="81dp" />
+
+    <EditText
+        android:id="@+id/nameusu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/Usuario"
+        android:layout_below="@+id/imageView"
+        android:layout_toEndOf="@+id/BienvenidaLog"
+        android:layout_marginTop="72dp" />
+
+    <EditText
+        android:id="@+id/passusu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/nameusu"
+        android:hint="Contraseña"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/cancelarlog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="85dp"
+        android:background="@color/colorAccent"
+        android:text="@string/cancelarlog"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:onClick="ClickCancel"
+        android:layout_below="@+id/passusu"
+        android:layout_alignStart="@+id/passusu" />
+
+    <Button
+        android:id="@+id/Log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/Accesederlog"
+        android:onClick="Click"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:layout_alignBaseline="@+id/cancelarlog"
+        android:layout_alignBottom="@+id/cancelarlog"
+        android:layout_alignEnd="@+id/passusu" />
+
+</RelativeLayout>

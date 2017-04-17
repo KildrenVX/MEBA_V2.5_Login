@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">MEBA</string>
+    <string name="textviewSaludo">HOLA PERFIL</string>
+    <string name="NombrePErfil">Sebastian</string>
+    <string name="nivel">Nivel:</string>
+    <string name="nivelnum">12</string>
+    <string name="Editarp">Editar Perfil</string>
+    <string name="Historial">Historial</string>
+    <string name="mensajes">Bandeja de entrada</string>
+    <string name="ajustes">Ajustes</string>
+    <string name="Agregar_PI">Agregar punto de interes</string>
+    <string name="Nombre_PI">Nombre del lugar</string>
+    <string name="Agregar_Archivo">Afregar_Foto</string>
+    <string name="CancerPI">Cancelar</string>
+    <string name="AgreagarPI">Agregar</string>
+    <string name="Usuario">Usuario</string>
+    <string name="Acceso">Acceso</string>
+    <string name="cancelarlog">Cancelar</string>
+    <string name="Accesederlog">Acceder</string>
+</resources>
